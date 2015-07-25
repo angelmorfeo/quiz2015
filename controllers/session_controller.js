@@ -7,6 +7,30 @@ exports.loginRequired = function(req, res, next) {
     }
 };
 
+// MW de auto-logout
+exports.autoLogout = function(req, res, next) {
+    if (!req.session.user){
+	next();
+	return;
+    }
+
+    if(!req.session.date){
+        req.session.date = (new Date()).getTime();	
+    } else {
+	var _ms = (new Date()).getTime();
+	var ms = _ms - req.session.date;
+	if (ms > 120000) { //2 minutos (120 segundos)
+		delete req.session.user;
+		req.session.errors = [{"message": 'Se ha caducado la session (2 minutos)'}];
+            	res.redirect("/login");
+            	return;
+	} else {
+		req.session.date = (new Date()).getTime();
+	}
+    }
+    next();
+};
+
 // Get /login   -- Formulario de login
 exports.new = function(req, res) {
     var errors = req.session.errors || {};
