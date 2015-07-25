@@ -11,13 +11,14 @@ router.get('/', function(req, res) {
 
 //Autoload de comandos con :quizId
 router.param('quizId', quizController.load); //autoload :quizId
+router.param('commentId', commentController.load); //autoload :commentId
 
 //Definición de rutas de sesión
 router.get('/login', sessionController.new);	//formulario login
 router.post('/login', sessionController.create); //crear session
 router.get('/logout', sessionController.destroy); //Deberia ser .delete   
 
-
+//Definicion de rutas de preguntas
 router.get('/quizes', quizController.index);
 router.get('/quizes/:quizId(\\d+)', quizController.show);
 router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
@@ -27,8 +28,10 @@ router.get('/quizes/:quizId(\\d+)/edit', sessionController.loginRequired, quizCo
 router.put('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.update);
 router.delete('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.destroy);
 
+//Definicion de rutas de comentarios
 router.get('/quizes/:quizId(\\d+)/comments/new', commentController.new);
 router.post('/quizes/:quizId(\\d+)/comments', commentController.create);
+router.get('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish',sessionController.loginRequired, commentController.publish);//Deberia ser un put ya que es una actualizacion
 
 router.get('/author', function(req, res){
 	res.render('author', { errors: [] });
