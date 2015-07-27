@@ -4,11 +4,11 @@ var models = require('../models/models.js')
 //GET /quizes/stadistics
 exports.process = function(req, res){
 	var quizNum, commentNum, avgCommnent, quizComment, quizNoComment;
-	models.Quiz.count().on('success', function(quiz) {
+	models.Quiz.count().then(function(quiz) {
 		quizNum = quiz;
-	models.Comment.count().on('success', function(comment) {		
+	models.Comment.count().then(function(comment) {		
 		commentNum = comment;
-	models.Comment.aggregate('id', 'avg', {group: ["QuizId"]}).on('success', function(avg) {		
+	models.Comment.aggregate('id', 'avg', {group: ["QuizId"]}).then(function(avg) {		
 		//avgComment = avg;
 		if (quizNum == 0)
 			avgComment = 0;
@@ -18,13 +18,13 @@ exports.process = function(req, res){
 				include: [{model: models.Comment}],
 				where: ["QuizId not null"],
 				distinct: ["id"]
-			}).on('success', function(count) {
+			}).then(function(count) {
 		quizComment = count;
 	models.Quiz.count({
                                 include: [{model: models.Comment}],
                                 where: ["QuizId is null"],
                                 distinct: ["id"]
-                        }).on('success', function(count) {
+                        }).then(function(count) {
 		quizNoComment = count;
 
 		res.render('quizes/stadistics', {
