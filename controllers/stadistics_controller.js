@@ -17,19 +17,21 @@ exports.process = function(req, res){
 		else
 			avgComment = commentNum / quizNum;
 		console.log('3');
-	models.Quiz.count({
+/*	models.Quiz.count({
 				include: [{model: models.Comment}],
 				where: ["QuizId not null"],
 				distinct: ["id"]
-			}).then(function(count) {
-		quizComment = count;
+			}).then(function(count) {*/
+	models.Comment.count({group: ['QuizId']}).then(function(count) {
+		quizComment = count.length;
 		console.log('4');
-	models.Quiz.count({
+/*	models.Quiz.count({
                                 include: [{model: models.Comment}],
                                 where: ["QuizId is null"],
                                 distinct: ["id"]
-                        }).then(function(count) {
-		quizNoComment = count;
+                        }).then(function(count) {*/
+//		quizNoComment = count;
+		quizNoComment = quizNum - quizComment;
 		console.log('5');
 
 		res.render('quizes/stadistics', {
@@ -44,6 +46,6 @@ exports.process = function(req, res){
 	})
 	})
 //	})
-	})
+//	})
     	})
 };
