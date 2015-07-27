@@ -8,7 +8,7 @@ exports.process = function(req, res){
 		quizNum = quiz;
 	models.Comment.count().on('success', function(comment) {		
 		commentNum = comment;
-	models.Comment.aggregate('Id', 'avg', {group: ["QuizId"]}).on('success', function(avg) {		
+	models.Comment.aggregate('id', 'avg', {group: ["QuizId"]}).on('success', function(avg) {		
 		//avgComment = avg;
 		if (quizNum == 0)
 			avgComment = 0;
@@ -17,13 +17,13 @@ exports.process = function(req, res){
 	models.Quiz.count({
 				include: [{model: models.Comment}],
 				where: ["QuizId not null"],
-				distinct: ["Id"]
+				distinct: ["id"]
 			}).on('success', function(count) {
 		quizComment = count;
 	models.Quiz.count({
                                 include: [{model: models.Comment}],
                                 where: ["QuizId is null"],
-                                distinct: ["Id"]
+                                distinct: ["id"]
                         }).on('success', function(count) {
 		quizNoComment = count;
 
